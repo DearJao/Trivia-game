@@ -2,7 +2,9 @@ import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { executeLogin } from '../redux/actions';
+import executeLogin from '../redux/actions';
+
+const URL = 'https://opentdb.com/api_token.php?command=request';
 
 class Login extends Component {
   constructor(props) {
@@ -34,14 +36,20 @@ class Login extends Component {
   };
 
   handleSubmit = (ev) => {
+    const { history } = this.props;
     ev.preventDefault();
     const { login } = this.props;
-    const { userEmail } = this.state;
-    login(userEmail);
-    this.setState({
-      isLogged: true,
-    });
+    const { userEmail, userName } = this.state;
+    this.handleFetchToken();
+    login(userEmail, userName);
+    history.push('/carteira');
   };
+
+  handleFetchToken = () => {
+    fetch(URL)
+      .then((response) => response.json())
+      .then(({ token }) => localStorage.setItem('token', token));
+  }
 
   checkEmailIsValid(email) {
     const MAIL_FORMAT = /^([A-Za-z0-9_\-.])+@([A-Za-z0-9_\-.])+\.([A-Za-z]{2,4})$/;
@@ -54,12 +62,10 @@ class Login extends Component {
       userName,
       isEmailValid,
       isNameValid,
-      isLogged,
     } = this.state;
 
     return (
       <div>
-        {isLogged && <Redirect push to="/carteira" />}
         <form onSubmit={ this.handleSubmit }>
           <h2>Login</h2>
           <p>
@@ -112,7 +118,7 @@ Login.propTypes = {
 };
 
 const mapDispatchToProps = (dispatch) => ({
-  login: (value) => dispatch(executeLogin(value)),
+  login: (name, email) => dispatch(executeLogin(name, email)),
 });
 
 export default connect(null, mapDispatchToProps)(Login);

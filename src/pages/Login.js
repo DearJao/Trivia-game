@@ -36,20 +36,19 @@ class Login extends Component {
   };
 
   handleSubmit = (ev) => {
+    const { history } = this.props;
     ev.preventDefault();
     const { login } = this.props;
     const { userEmail, userName } = this.state;
     this.handleFetchToken();
     login(userEmail, userName);
-    this.setState({
-      isLogged: true,
-    });
+    history.push('/carteira');
   };
 
   handleFetchToken = () => {
     fetch(URL)
       .then((response) => response.json())
-      .then(({ token }) => localStorage.setItem('token', JSON.stringify(token)));
+      .then(({ token }) => localStorage.setItem('token', token));
   }
 
   checkEmailIsValid(email) {
@@ -63,12 +62,10 @@ class Login extends Component {
       userName,
       isEmailValid,
       isNameValid,
-      isLogged,
     } = this.state;
 
     return (
       <div>
-        {isLogged && <Redirect push to="/carteira" />}
         <form onSubmit={ this.handleSubmit }>
           <h2>Login</h2>
           <p>

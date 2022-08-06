@@ -41,7 +41,27 @@ class Game extends Component {
     );
   }
 
-  renderQuestions = () => {
+  renderQuestion = () => {
+    const { activeIndex } = this.state;
+    const { results } = questionsResponse;
+    return (
+      <section>
+        <h2>{ results[activeIndex].category }</h2>
+        <h3>{ results[activeIndex].question }</h3>
+        <div data-testid="answer-options">
+          {
+            this.getSortedAnswers(results[activeIndex]).map((answer, indexAnswer) => {
+              if (answer === results[activeIndex].correct_answer) {
+                return this.renderBtn(true, answer, indexAnswer);
+              }
+              return this.renderBtn(false, answer, indexAnswer);
+            })
+          }
+        </div>
+      </section>
+    );
+  }
+  /* renderQuestions = () => {
     const { activeIndex } = this.state;
     const { results } = questionsResponse;
     return results.map((item, index) => {
@@ -66,13 +86,13 @@ class Game extends Component {
         </section>
       );
     });
-  }
+  } */
 
   render() {
     return (
       <div>
         {
-          this.renderQuestions()
+          this.renderQuestion()
         }
       </div>
     );

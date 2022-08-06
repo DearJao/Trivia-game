@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import executeLogin from '../redux/actions';
@@ -15,7 +14,6 @@ class Login extends Component {
       userName: '',
       isNameValid: false,
       isEmailValid: false,
-      isLogged: false,
     };
   }
 
@@ -42,7 +40,7 @@ class Login extends Component {
     const { userEmail, userName } = this.state;
     this.handleFetchToken();
     login(userEmail, userName);
-    history.push('/carteira');
+    history.push('/game');
   };
 
   handleFetchToken = () => {
@@ -115,6 +113,9 @@ class Login extends Component {
 
 Login.propTypes = {
   login: PropTypes.func.isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.func,
+  }).isRequired,
 };
 
 const mapDispatchToProps = (dispatch) => ({

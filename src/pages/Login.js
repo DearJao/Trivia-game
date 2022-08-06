@@ -62,51 +62,60 @@ class Login extends Component {
       isNameValid,
     } = this.state;
 
+    const { history } = this.props;
+
     return (
-      <div>
-        <form onSubmit={ this.handleSubmit }>
-          <h2>Login</h2>
-          <p>
-            <label htmlFor="user-password">
-              Name:
-              {' '}
-              <input
-                type="text"
-                name="userName"
-                id="user-name"
-                data-testid="input-player-name"
-                value={ userName }
-                onChange={ this.handleInputChange }
-                placeholder="Enter a name"
-              />
-            </label>
-          </p>
-          <p>
-            <label htmlFor="user-email">
-              Email:
-              {' '}
-              <input
-                type="email"
-                id="user-email"
-                data-testid="input-gravatar-email"
-                name="userEmail"
-                value={ userEmail }
-                onChange={ this.handleInputChange }
-                placeholder="user@mail.com"
-              />
-            </label>
-          </p>
-          <p>
-            <button
-              type="submit"
-              disabled={ !(isEmailValid && isNameValid) }
-              data-testid="btn-play"
-            >
-              Play
-            </button>
-          </p>
-        </form>
-      </div>
+      <form onSubmit={ this.handleSubmit }>
+        <h2>Login</h2>
+        <p>
+          <label htmlFor="user-password">
+            Name:
+            {' '}
+            <input
+              type="text"
+              name="userName"
+              id="user-name"
+              data-testid="input-player-name"
+              value={ userName }
+              onChange={ this.handleInputChange }
+              placeholder="Enter a name"
+            />
+          </label>
+        </p>
+        <p>
+          <label htmlFor="user-email">
+            Email:
+            {' '}
+            <input
+              type="email"
+              id="user-email"
+              data-testid="input-gravatar-email"
+              name="userEmail"
+              value={ userEmail }
+              onChange={ this.handleInputChange }
+              placeholder="user@mail.com"
+            />
+          </label>
+        </p>
+        <p>
+          <button
+            type="submit"
+            disabled={ !(isEmailValid && isNameValid) }
+            data-testid="btn-play"
+          >
+            Play
+          </button>
+        </p>
+        <p>
+          <button
+            type="button"
+            data-testid="btn-settings"
+            onClick={ () => history.push('/settings') }
+          >
+            Settings
+          </button>
+        </p>
+      </form>
     );
   }
 }

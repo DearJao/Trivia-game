@@ -61,32 +61,6 @@ class Game extends Component {
       </section>
     );
   }
-  /* renderQuestions = () => {
-    const { activeIndex } = this.state;
-    const { results } = questionsResponse;
-    return results.map((item, index) => {
-      const isActive = activeIndex === index;
-      return (
-        <section
-          key={ index }
-          style={ isActive ? null : { display: 'none' } }
-        >
-          <h2>{ item.category }</h2>
-          <h3>{ item.question }</h3>
-          <div data-testid="answer-options">
-            {
-              this.getSortedAnswers(item).map((answer, indexAnswer) => {
-                if (answer === item.correct_answer) {
-                  return this.renderBtn(true, answer, indexAnswer);
-                }
-                return this.renderBtn(false, answer, indexAnswer);
-              })
-            }
-          </div>
-        </section>
-      );
-    });
-  } */
 
   render() {
     return (

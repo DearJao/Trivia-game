@@ -10,7 +10,7 @@ class Header extends Component {
     const URL = `https://www.gravatar.com/avatar/${hash}`;
     return (
       <header>
-        <img src={ URL } alt="Avatar"/>
+        <img src={ URL } alt="Avatar" />
         <p
           data-testid="header-player-name"
         >

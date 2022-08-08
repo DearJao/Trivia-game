@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import Header from '../components/Header';
 import { doFetchQuestions } from '../redux/actions';
 import { URL_GET_QUESTIONS } from '../utils/constants';
 
@@ -103,6 +104,7 @@ class Game extends Component {
     const { isLoading } = this.props;
     return (
       <div>
+        <Header />
         {
           !isLoading && this.renderQuestion()
         }

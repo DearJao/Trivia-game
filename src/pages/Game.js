@@ -2,14 +2,14 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { doFetchQuestions } from '../redux/actions';
-import { URL_GET_QUESTIONS, questionsResponse } from '../utils/constants';
+import { URL_GET_QUESTIONS } from '../utils/constants';
 
 class Game extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      activeIndex: 2,
+      activeIndex: 0,
     };
   }
 
@@ -18,8 +18,14 @@ class Game extends Component {
   }
 
   shouldComponentUpdate(nextProps) {
-    const { results } = nextProps;
-    if (results.length) return false;
+    const { isInvalid } = nextProps;
+    console.log(isInvalid);
+    if (isInvalid) {
+      const { history } = this.props;
+      localStorage.removeItem('token');
+      history.push('/');
+      return false;
+    }
     return true;
   }
 
@@ -38,19 +44,19 @@ class Game extends Component {
   }
 
   renderQuestion = () => {
-    const { history } = this.props;
     const { activeIndex } = this.state;
     const { questions } = this.props;
     console.log(questions);
-    if (this.handleCodeResponse(questions)) {
-      history.push('/');
-      return;
-    }
     const { results } = questions;
+    if (!results.length) {
+      return (
+        <div>vazio</div>
+      );
+    }
     return (
       <section>
-        <h2>{ results[activeIndex].category }</h2>
-        <h3>{ results[activeIndex].question }</h3>
+        <h2 data-testid="question-category">{ results[activeIndex].category }</h2>
+        <h3 data-testid="question-text">{ results[activeIndex].question }</h3>
         <div data-testid="answer-options">
           {
             this.getSortedAnswers(results[activeIndex]).map((answer, indexAnswer) => {
@@ -65,17 +71,11 @@ class Game extends Component {
     );
   }
 
-  handleCodeResponse = ({ response_code: responseCode }) => {
-    if (responseCode === 0) return;
-    localStorage.removeItem('token');
-    return true;
-  }
-
-  async handleFetchQuestions() {
+  handleFetchQuestions() {
     const { onFecthQuestions } = this.props;
     const TOKEN = localStorage.getItem('token');
-    const TOKEN_INVALID = 'INVALID_TOKEN';
-    const URL_QUESTIONS = URL_GET_QUESTIONS + TOKEN_INVALID;
+    console.log(TOKEN);
+    const URL_QUESTIONS = URL_GET_QUESTIONS + TOKEN;
     onFecthQuestions(URL_QUESTIONS);
   }
 
@@ -118,6 +118,7 @@ Game.propTypes = {
   }).isRequired,
   isLoading: PropTypes.bool.isRequired,
   results: PropTypes.arrayOf(PropTypes.object),
+  isInvalid: PropTypes.bool.isRequired,
 };
 
 Game.defaultProps = {
@@ -131,6 +132,7 @@ const mapDispatchToProps = (dispatch) => ({
 const mapStateToProps = (state) => ({
   questions: state.api.questions,
   isLoading: state.api.isLoading,
+  isInvalid: state.api.isInvalid,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Game);

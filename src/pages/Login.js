@@ -34,19 +34,20 @@ class Login extends Component {
   };
 
   handleSubmit = (ev) => {
-    const { history } = this.props;
     ev.preventDefault();
-    const { login } = this.props;
-    const { userEmail, userName } = this.state;
     this.handleFetchToken();
-    login(userEmail, userName);
-    history.push('/game');
   };
 
   handleFetchToken = () => {
+    const { history, login } = this.props;
     fetch(URL)
       .then((response) => response.json())
-      .then(({ token }) => localStorage.setItem('token', token));
+      .then(({ token }) => localStorage.setItem('token', token))
+      .then(() => {
+        const { userEmail, userName } = this.state;
+        login(userEmail, userName);
+        history.push('/game');
+      });
   }
 
   checkEmailIsValid(email) {

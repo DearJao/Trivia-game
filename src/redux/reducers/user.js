@@ -4,6 +4,7 @@ import actionTypes from '../actionTypes';
 const INITIAL_STATE = {
   name: '',
   gravatarEmail: '',
+  score: 0,
 };
 
 const userReducer = (state = INITIAL_STATE, action) => {

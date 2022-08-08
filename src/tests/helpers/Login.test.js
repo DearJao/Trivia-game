@@ -4,6 +4,8 @@ import { screen } from '@testing-library/react';
 import { renderWithRouterAndRedux } from './renderWithRouterAndRedux';
 import userEvent from '@testing-library/user-event';
 
+const URL = 'https://opentdb.com/api_token.php?command=request';
+
 describe('Desenvolva testes para atingir 90% de cobertura da tela de Login', () => {
   test('se existe um h1 com Trivia', () => {
     renderWithRouterAndRedux(<App />)

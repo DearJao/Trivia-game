@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import executeLogin from '../redux/actions';
@@ -15,7 +14,6 @@ class Login extends Component {
       userName: '',
       isNameValid: false,
       isEmailValid: false,
-      isLogged: false,
     };
   }
 
@@ -42,8 +40,8 @@ class Login extends Component {
     const { userEmail, userName } = this.state;
     this.handleFetchToken();
     login(userEmail, userName);
-    history.push('/carteira');
-  };
+    history.push('/game');
+  }
 
   handleFetchToken = () => {
     fetch(URL)
@@ -64,57 +62,69 @@ class Login extends Component {
       isNameValid,
     } = this.state;
 
+    const { history } = this.props;
+
     return (
-      <div>
-        <form onSubmit={ this.handleSubmit }>
-          <h2>Login</h2>
-          <p>
-            <label htmlFor="user-password">
-              Name:
-              {' '}
-              <input
-                type="text"
-                name="userName"
-                id="user-name"
-                data-testid="input-player-name"
-                value={ userName }
-                onChange={ this.handleInputChange }
-                placeholder="Enter a name"
-              />
-            </label>
-          </p>
-          <p>
-            <label htmlFor="user-email">
-              Email:
-              {' '}
-              <input
-                type="email"
-                id="user-email"
-                data-testid="input-gravatar-email"
-                name="userEmail"
-                value={ userEmail }
-                onChange={ this.handleInputChange }
-                placeholder="user@mail.com"
-              />
-            </label>
-          </p>
-          <p>
-            <button
-              type="submit"
-              disabled={ !(isEmailValid && isNameValid) }
-              data-testid="btn-play"
-            >
-              Play
-            </button>
-          </p>
-        </form>
-      </div>
+      <form onSubmit={ this.handleSubmit }>
+        <h2>Login</h2>
+        <p>
+          <label htmlFor="user-password">
+            Name:
+            {' '}
+            <input
+              type="text"
+              name="userName"
+              id="user-name"
+              data-testid="input-player-name"
+              value={ userName }
+              onChange={ this.handleInputChange }
+              placeholder="Enter a name"
+            />
+          </label>
+        </p>
+        <p>
+          <label htmlFor="user-email">
+            Email:
+            {' '}
+            <input
+              type="email"
+              id="user-email"
+              data-testid="input-gravatar-email"
+              name="userEmail"
+              value={ userEmail }
+              onChange={ this.handleInputChange }
+              placeholder="user@mail.com"
+            />
+          </label>
+        </p>
+        <p>
+          <button
+            type="submit"
+            disabled={ !(isEmailValid && isNameValid) }
+            data-testid="btn-play"
+          >
+            Play
+          </button>
+        </p>
+        <p>
+          <button
+            type="button"
+            data-testid="btn-settings"
+            onClick={ () => history.push('/settings') }
+          >
+            Settings
+          </button>
+        </p>
+      </form>
     );
   }
 }
 
 Login.propTypes = {
   login: PropTypes.func.isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.func,
+  }).isRequired,
 };
 
 const mapDispatchToProps = (dispatch) => ({

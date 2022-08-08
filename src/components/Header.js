@@ -1,4 +1,5 @@
-import React, { Component } from 'react'
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 class Header extends Component {
@@ -17,9 +18,14 @@ class Header extends Component {
           Score: { score }
         </p>
       </header>
-    )
+    );
   }
 }
+
+Header.propTypes = {
+  name: PropTypes.string,
+  score: PropTypes.number,
+}.isRequired;
 
 const mapStateToProps = (store) => ({
   name: store.player.name,

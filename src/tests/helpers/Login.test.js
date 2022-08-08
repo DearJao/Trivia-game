@@ -7,7 +7,7 @@ import userEvent from '@testing-library/user-event';
 const URL = 'https://opentdb.com/api_token.php?command=request';
 
 describe('Desenvolva testes para atingir 90% de cobertura da tela de Login', () => {
-  test('se existe um h1 com Trivia', () => {
+  test('se existe um h2 com login', () => {
     renderWithRouterAndRedux(<App />)
     const title = screen.getByRole('heading',
       {name: /login/i, level: 2});

@@ -46,12 +46,6 @@ class Game extends Component {
     }));
   }
 
-  handleLogout() {
-    const { history } = this.props;
-    localStorage.removeItem('token');
-    history.push('/');
-  }
-
   renderQuestion = () => {
     const { activeIndex } = this.state;
     const { questions } = this.props;
@@ -84,6 +78,12 @@ class Game extends Component {
         wrongAnswer: '3px solid red',
       },
       });
+    }
+
+    handleLogout() {
+      const { history } = this.props;
+      localStorage.removeItem('token');
+      history.push('/');
     }
 
     handleFetchQuestions() {

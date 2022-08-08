@@ -4,6 +4,11 @@ import PropTypes from 'prop-types';
 import Header from '../components/Header';
 
 class Feedback extends Component {
+  handleButton = () => {
+    const { history } = this.props;
+    history.push('/');
+  };
+
   render() {
     const minimumScore = 3;
     const { score, assertions } = this.props;
@@ -16,6 +21,14 @@ class Feedback extends Component {
         <p data-testid="feedback-text">
           { score < minimumScore ? 'Could be better...' : 'Well Done!' }
         </p>
+        <button
+          type="button"
+          data-testid="btn-play-again"
+          onClick={ this.handleButton }
+        >
+          Play Again
+
+        </button>
       </div>
     );
   }

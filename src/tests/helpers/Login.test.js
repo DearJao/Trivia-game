@@ -1,10 +1,8 @@
 import React from 'react';
 import App from '../../App';
-import { screen } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
 import { renderWithRouterAndRedux } from './renderWithRouterAndRedux';
 import userEvent from '@testing-library/user-event';
-
-const URL = 'https://opentdb.com/api_token.php?command=request';
 
 describe('Desenvolva testes para atingir 90% de cobertura da tela de Login', () => {
   test('se existe um h2 com login', () => {
@@ -36,7 +34,14 @@ describe('Desenvolva testes para atingir 90% de cobertura da tela de Login', () 
     expect(btnPlay).toBeInTheDocument();
     expect(btnPlay).toBeDisabled();
   });
-  test('o funcionamento do botão Play', () => {
+  test('o funcionamento do botão Play', async () => {
+    global.fetch = jest.fn().mockResolvedValue({
+      json: jest.fn().mockResolvedValue({
+        "response_code":0,
+        "response_message":"Token Generated Successfully!",
+        "token":"f00cb469ce38726ee00a7c6836761b0a4fb808181a125dcde6d50a9f3c9127b6"
+      })
+    });
     const { history } = renderWithRouterAndRedux(<App />)
     const inputName = screen.getByTestId('input-player-name');
     const inputEmail = screen.getByTestId('input-gravatar-email');
@@ -51,6 +56,7 @@ describe('Desenvolva testes para atingir 90% de cobertura da tela de Login', () 
 
     userEvent.click(btnPlay)
     expect(history.location.pathname).toBe('/game')
+    await waitFor(() => expect(global.fetch).toHaveBeenCalled());
   });
   test('o funcionamento do botão Settings', () => {
     const { history } = renderWithRouterAndRedux(<App />)

@@ -41,7 +41,7 @@ class Login extends Component {
     this.handleFetchToken();
     login(userEmail, userName);
     history.push('/game');
-  };
+  }
 
   handleFetchToken = () => {
     fetch(URL)

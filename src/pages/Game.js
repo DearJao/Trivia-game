@@ -11,6 +11,10 @@ class Game extends Component {
 
     this.state = {
       activeIndex: 0,
+      borderColor: {
+        correctAnswer: '',
+        wrongAnswer: '',
+      },
     };
   }
 
@@ -42,12 +46,6 @@ class Game extends Component {
     }));
   }
 
-  handleLogout() {
-    const { history } = this.props;
-    localStorage.removeItem('token');
-    history.push('/');
-  }
-
   renderQuestion = () => {
     const { activeIndex } = this.state;
     const { questions } = this.props;
@@ -74,43 +72,69 @@ class Game extends Component {
     );
   }
 
-  handleFetchQuestions() {
-    const { onFecthQuestions } = this.props;
-    const TOKEN = localStorage.getItem('token');
-    // const TOKEN_INVALID = 'INVALID';
-    console.log(TOKEN);
-    const URL_QUESTIONS = URL_GET_QUESTIONS + TOKEN;
-    onFecthQuestions(URL_QUESTIONS);
-  }
+    handleAnswer = () => {
+      this.setState({ borderColor: {
+        correctAnswer: '3px solid rgb(6, 240, 15)',
+        wrongAnswer: '3px solid red',
+      },
+      });
+    }
 
-  renderBtn(bool, str, number) {
-    if (bool) {
+    handleLogout() {
+      const { history } = this.props;
+      localStorage.removeItem('token');
+      history.push('/');
+    }
+
+    handleFetchQuestions() {
+      const { onFecthQuestions } = this.props;
+      const TOKEN = localStorage.getItem('token');
+      // const TOKEN_INVALID = 'INVALID';
+      console.log(TOKEN);
+      const URL_QUESTIONS = URL_GET_QUESTIONS + TOKEN;
+      onFecthQuestions(URL_QUESTIONS);
+    }
+
+    renderBtn(bool, str, number) {
+      const { borderColor: { correctAnswer, wrongAnswer } } = this.state;
+      if (bool) {
+        return (
+          <button
+            onClick={ this.handleAnswer }
+            style={ { border: correctAnswer } }
+            key={ number }
+            type="button"
+            data-testid="correct-answer"
+          >
+            { str }
+
+          </button>
+        );
+      }
       return (
-        <button key={ number } type="button" data-testid="correct-answer">{ str }</button>
+        <button
+          onClick={ this.handleAnswer }
+          style={ { border: wrongAnswer } }
+          key={ number }
+          type="button"
+          data-testid={ `wrong-answer-${number}` }
+        >
+          { str }
+        </button>
       );
     }
-    return (
-      <button
-        key={ number }
-        type="button"
-        data-testid={ `wrong-answer-${number}` }
-      >
-        { str }
-      </button>
-    );
-  }
 
-  render() {
-    const { isLoading } = this.props;
-    return (
-      <div>
-        <Header />
-        {
-          !isLoading && this.renderQuestion()
-        }
-      </div>
-    );
-  }
+    render() {
+      const { isLoading } = this.props;
+      return (
+        <div>
+          <Header />
+          {
+            !isLoading && this.renderQuestion()
+          }
+        </div>
+      );
+    }
 }
 
 Game.propTypes = {

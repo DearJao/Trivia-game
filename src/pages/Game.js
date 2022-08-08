@@ -21,9 +21,7 @@ class Game extends Component {
     const { isInvalid } = nextProps;
     console.log(isInvalid);
     if (isInvalid) {
-      const { history } = this.props;
-      localStorage.removeItem('token');
-      history.push('/');
+      this.handleLogout();
       return false;
     }
     return true;
@@ -43,15 +41,19 @@ class Game extends Component {
     }));
   }
 
+  handleLogout() {
+    const { history } = this.props;
+    localStorage.removeItem('token');
+    history.push('/');
+  }
+
   renderQuestion = () => {
     const { activeIndex } = this.state;
     const { questions } = this.props;
     console.log(questions);
     const { results } = questions;
     if (!results.length) {
-      return (
-        <div>vazio</div>
-      );
+      return null;
     }
     return (
       <section>
@@ -74,6 +76,7 @@ class Game extends Component {
   handleFetchQuestions() {
     const { onFecthQuestions } = this.props;
     const TOKEN = localStorage.getItem('token');
+    // const TOKEN_INVALID = 'INVALID';
     console.log(TOKEN);
     const URL_QUESTIONS = URL_GET_QUESTIONS + TOKEN;
     onFecthQuestions(URL_QUESTIONS);

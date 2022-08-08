@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import executeLogin from '../redux/actions';
+import { executeLogin } from '../redux/actions';
 
 const URL = 'https://opentdb.com/api_token.php?command=request';
 

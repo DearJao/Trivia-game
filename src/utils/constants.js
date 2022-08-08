@@ -1,4 +1,6 @@
-const questionsResponse = {
+export const URL_GET_QUESTIONS = 'https://opentdb.com/api.php?amount=5&token=';
+
+export const questionsResponse = {
   response_code: 0,
   results: [
     {
@@ -45,5 +47,3 @@ const questionsResponse = {
     },
   ],
 };
-
-export default questionsResponse;

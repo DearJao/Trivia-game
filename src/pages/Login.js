@@ -44,10 +44,14 @@ class Login extends Component {
       .then((response) => response.json())
       .then(({ token }) => localStorage.setItem('token', token))
       .then(() => {
-        const { userEmail, userName } = this.state;
-        login(userEmail, userName);
-        history.push('/game');
+        this.handleLogin(login, history);
       });
+  }
+
+  handleLogin = (login, history) => {
+    const { userEmail, userName } = this.state;
+    login(userEmail, userName);
+    history.push('/game');
   }
 
   checkEmailIsValid(email) {

@@ -17,6 +17,12 @@ class Game extends Component {
     this.handleFetchQuestions();
   }
 
+  shouldComponentUpdate(nextProps) {
+    const { results } = nextProps;
+    if (results.length) return false;
+    return true;
+  }
+
   getSortedAnswers(item) {
     const sortFactor = 0.5;
     const { correct_answer: correctAnswer, incorrect_answers: incorrectAnswers } = item;
@@ -32,10 +38,14 @@ class Game extends Component {
   }
 
   renderQuestion = () => {
+    const { history } = this.props;
     const { activeIndex } = this.state;
     const { questions } = this.props;
     console.log(questions);
-    // this.handleCodeResponse(questions);
+    if (this.handleCodeResponse(questions)) {
+      history.push('/');
+      return;
+    }
     const { results } = questions;
     return (
       <section>
@@ -57,16 +67,15 @@ class Game extends Component {
 
   handleCodeResponse = ({ response_code: responseCode }) => {
     if (responseCode === 0) return;
-    // localStorage.removeItem('token');
-    const { history } = this.props;
-    history.push('/');
+    localStorage.removeItem('token');
+    return true;
   }
 
   async handleFetchQuestions() {
     const { onFecthQuestions } = this.props;
     const TOKEN = localStorage.getItem('token');
-    // const TOKEN_INVALID = 'INVALID_TOKEN';
-    const URL_QUESTIONS = URL_GET_QUESTIONS + TOKEN;
+    const TOKEN_INVALID = 'INVALID_TOKEN';
+    const URL_QUESTIONS = URL_GET_QUESTIONS + TOKEN_INVALID;
     onFecthQuestions(URL_QUESTIONS);
   }
 
@@ -108,6 +117,11 @@ Game.propTypes = {
     push: PropTypes.func,
   }).isRequired,
   isLoading: PropTypes.bool.isRequired,
+  results: PropTypes.arrayOf(PropTypes.object),
+};
+
+Game.defaultProps = {
+  results: [],
 };
 
 const mapDispatchToProps = (dispatch) => ({

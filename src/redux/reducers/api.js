@@ -2,7 +2,7 @@
 import actionTypes from '../actionTypes';
 
 const INITIAL_STATE = {
-  isLoading: false,
+  isLoading: true,
   questions: {},
 };
 

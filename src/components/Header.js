@@ -15,7 +15,8 @@ class Header extends Component {
         <p
           data-testid="header-score"
         >
-          Score: { score }
+          Score:
+          { score }
         </p>
       </header>
     );

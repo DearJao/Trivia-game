@@ -6,11 +6,13 @@ import Header from '../components/Header';
 class Feedback extends Component {
   render() {
     const minimumScore = 3;
-    const { score } = this.props;
+    const { score, assertions } = this.props;
 
     return (
       <div>
         <Header />
+        <p data-testid="feedback-total-score">{ score }</p>
+        <p data-testid="feedback-total-question">{ assertions }</p>
         <p data-testid="feedback-text">
           { score < minimumScore ? 'Could be better...' : 'Well Done!' }
         </p>
@@ -25,6 +27,7 @@ Feedback.propTypes = {
 
 const mapStateToProps = (store) => ({
   score: store.player.score,
+  assertions: store.player.assertions,
 });
 
 export default connect(mapStateToProps)(Feedback);

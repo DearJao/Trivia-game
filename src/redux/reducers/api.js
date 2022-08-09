@@ -1,5 +1,6 @@
 // Esse reducer será responsável por tratar as informações da API TRIVIA
 import actionTypes from '../actionTypes';
+import getQuestionsWithSortedAnswers from '../../utils/helperFunctions';
 
 const INITIAL_STATE = {
   isLoading: true,
@@ -8,7 +9,7 @@ const INITIAL_STATE = {
 };
 
 const apiReducer = (state = INITIAL_STATE, action) => {
-  const validCode = 3;
+  const invalidCode = 3;
   switch (action.type) {
   case actionTypes.FETCH_REQUEST_QUESTION:
     return {
@@ -19,8 +20,11 @@ const apiReducer = (state = INITIAL_STATE, action) => {
     return {
       ...state,
       isLoading: false,
-      questions: action.payload,
-      isInvalid: action.payload.response_code === validCode,
+      questions: {
+        ...action.payload,
+        results: [...getQuestionsWithSortedAnswers(action.payload.results)],
+      },
+      isInvalid: action.payload.response_code === invalidCode,
     };
   default:
     return state;

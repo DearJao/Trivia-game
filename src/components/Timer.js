@@ -1,14 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { timerDecreasing, timerReset } from '../redux/actions';
 
 class Timer extends React.Component {
-  constructor() {
-    super();
-    this.state = {
-      seconds: 30,
-    };
-  }
-
   componentDidMount() {
     const { counter } = this.props;
     this.count();
@@ -20,29 +15,42 @@ class Timer extends React.Component {
   }
 
   resetTimer = () => {
+    const { timerResetDispatch } = this.props;
+    timerResetDispatch();
     clearInterval(this.timer);
     return 0;
   }
 
-    count = () => {
-      const oneSecond = 1000;
-      this.timer = setInterval(() => {
-        this.setState((state) => ({ seconds: state.seconds - 1 }));
-      }, oneSecond);
-    }
+  count = () => {
+    const { timerDecreasingDispatch } = this.props;
+    const oneSecond = 1000;
+    this.timer = setInterval(() => {
+      timerDecreasingDispatch()
+    }, oneSecond);
+  }
 
-    render() {
-      const { seconds } = this.state;
-      return (
-        <div>
-          { seconds === 0 ? this.resetTimer() : seconds }
-        </div>
-      );
-    }
+  render() {
+    const { timer } = this.props;
+    return (
+      <div>
+        { timer === 0 ? this.resetTimer() : timer }
+      </div>
+    );
+  }
 }
 
 Timer.propTypes = {
   counter: PropTypes.func.isRequired,
 };
 
-export default Timer;
+const mapStateToProps = (store) => ({
+  timer: store.player.timer,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  timerDecreasingDispatch: () => dispatch(timerDecreasing()),
+  timerResetDispatch: () => dispatch(timerReset()),
+});
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(Timer);

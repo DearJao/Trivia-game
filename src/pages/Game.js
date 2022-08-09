@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Header from '../components/Header';
-import { doFetchQuestions } from '../redux/actions';
+import { doFetchQuestions, updateScore } from '../redux/actions';
 import { URL_GET_QUESTIONS } from '../utils/constants';
 import Timer from '../components/Timer';
 
@@ -75,81 +75,99 @@ class Game extends Component {
     );
   }
 
-    handleAnswer = () => {
-      this.setState({ borderColor: {
-        correctAnswer: '3px solid rgb(6, 240, 15)',
-        wrongAnswer: '3px solid red',
-      },
-      });
+  handleAnswer = (event) => {
+    const userAnswer = event.target.innerHTML
+    const { activeIndex } = this.state;
+    const { questions } = this.props;
+    const { results } = questions;
+    const corretAnswer = results[activeIndex].correct_answer;
+    const difficulty = {
+      easy: 1,
+      medium: 2,
+      hard: 3
+    }
+    
+    if (corretAnswer === userAnswer) {
+      const { timer, score, updateScoreDispatch } = this.props;
+      
+      const newScore = score + 10 + (difficulty[results[activeIndex].difficulty] * timer );
+      updateScoreDispatch(newScore);
     }
 
-    timeOut = () => {
-      this.setState({ disableButton: true });
-      this.handleAnswer();
-    }
+    this.setState({ borderColor: {
+      correctAnswer: '3px solid rgb(6, 240, 15)',
+      wrongAnswer: '3px solid red',
+    },
+    });
+  }
 
-    counter = () => {
-      const thirtySeconds = 30000;
-      setTimeout(this.timeOut, thirtySeconds);
-    }
+  timeOut = () => {
+    this.setState({ disableButton: true });
+    this.handleAnswer();
+  }
 
-    handleLogout() {
-      const { history } = this.props;
-      localStorage.removeItem('token');
-      history.push('/');
-    }
+  counter = () => {
+    const thirtySeconds = 30000;
+    setTimeout(this.timeOut, thirtySeconds);
+  }
 
-    handleFetchQuestions() {
-      const { onFecthQuestions } = this.props;
-      const TOKEN = localStorage.getItem('token');
-      // const TOKEN_INVALID = 'INVALID';
-      console.log(TOKEN);
-      const URL_QUESTIONS = URL_GET_QUESTIONS + TOKEN;
-      onFecthQuestions(URL_QUESTIONS);
-    }
+  handleLogout() {
+    const { history } = this.props;
+    localStorage.removeItem('token');
+    history.push('/');
+  }
 
-    renderBtn(bool, str, number) {
-      const { borderColor: { correctAnswer, wrongAnswer }, disableButton } = this.state;
-      if (bool) {
-        return (
-          <button
-            disabled={ disableButton }
-            onClick={ this.handleAnswer }
-            style={ { border: correctAnswer } }
-            key={ number }
-            type="button"
-            data-testid="correct-answer"
-          >
-            { str }
+  handleFetchQuestions() {
+    const { onFecthQuestions } = this.props;
+    const TOKEN = localStorage.getItem('token');
+    // const TOKEN_INVALID = 'INVALID';
+    console.log(TOKEN);
+    const URL_QUESTIONS = URL_GET_QUESTIONS + TOKEN;
+    onFecthQuestions(URL_QUESTIONS);
+  }
 
-          </button>
-        );
-      }
+  renderBtn(bool, str, number) {
+    const { borderColor: { correctAnswer, wrongAnswer }, disableButton } = this.state;
+    if (bool) {
       return (
         <button
           disabled={ disableButton }
           onClick={ this.handleAnswer }
-          style={ { border: wrongAnswer } }
+          style={ { border: correctAnswer } }
           key={ number }
           type="button"
-          data-testid={ `wrong-answer-${number}` }
+          data-testid="correct-answer"
         >
           { str }
+
         </button>
       );
     }
+    return (
+      <button
+        disabled={ disableButton }
+        onClick={ this.handleAnswer }
+        style={ { border: wrongAnswer } }
+        key={ number }
+        type="button"
+        data-testid={ `wrong-answer-${number}` }
+      >
+        { str }
+      </button>
+    );
+  }
 
-    render() {
-      const { isLoading } = this.props;
-      return (
-        <div>
-          <Header />
-          {
-            !isLoading && this.renderQuestion()
-          }
-        </div>
-      );
-    }
+  render() {
+    const { isLoading } = this.props;
+    return (
+      <div>
+        <Header />
+        {
+          !isLoading && this.renderQuestion()
+        }
+      </div>
+    );
+  }
 }
 
 Game.propTypes = {
@@ -171,12 +189,15 @@ Game.defaultProps = {
 
 const mapDispatchToProps = (dispatch) => ({
   onFecthQuestions: (url) => dispatch(doFetchQuestions(url)),
+  updateScoreDispatch: (newScore) => dispatch(updateScore(newScore)),
 });
 
 const mapStateToProps = (state) => ({
   questions: state.api.questions,
   isLoading: state.api.isLoading,
   isInvalid: state.api.isInvalid,
+  timer: state.player.timer,
+  score: state.player.score,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Game);

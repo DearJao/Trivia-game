@@ -33,3 +33,16 @@ export function doFetchQuestions(url) {
       });
   };
 }
+
+export const timerDecreasing = () => ({
+  type: actionTypes.TIMER_DECREASING,
+});
+
+export const timerReset = () => ({
+  type: actionTypes.TIMER_RESET,
+});
+
+export const updateScore = (newScore) => ({
+  type: actionTypes.SCORE_UPDATE,
+  payload: newScore,
+});

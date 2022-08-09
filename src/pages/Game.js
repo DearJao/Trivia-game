@@ -6,6 +6,8 @@ import { doFetchQuestions } from '../redux/actions';
 import { URL_GET_QUESTIONS } from '../utils/constants';
 import Timer from '../components/Timer';
 
+const MAX_INDEX = 4;
+
 class Game extends Component {
   constructor(props) {
     super(props);
@@ -17,6 +19,7 @@ class Game extends Component {
         wrongAnswer: '',
       },
       disableButton: false,
+      hasNextBtn: false,
     };
   }
 
@@ -24,11 +27,15 @@ class Game extends Component {
     this.handleFetchQuestions();
   }
 
-  shouldComponentUpdate(nextProps) {
+  shouldComponentUpdate(nextProps, nextState) {
     const { isInvalid } = nextProps;
+    const { activeIndex } = nextState;
     console.log(isInvalid);
     if (isInvalid) {
       this.handleLogout();
+      return false;
+    }
+    if (activeIndex > MAX_INDEX) {
       return false;
     }
     return true;
@@ -45,7 +52,18 @@ class Game extends Component {
   showNextQuestion = () => {
     this.setState((PrevState) => ({
       activeIndex: PrevState.activeIndex + 1,
-    }));
+      hasNextBtn: false,
+    }), () => {
+      this.redirectToFeedback();
+    });
+  }
+
+  redirectToFeedback = () => {
+    const { history } = this.props;
+    const { activeIndex } = this.state;
+    if (activeIndex > MAX_INDEX) {
+      history.push('/feedback');
+    }
   }
 
   renderQuestion = () => {
@@ -80,6 +98,7 @@ class Game extends Component {
         correctAnswer: '3px solid rgb(6, 240, 15)',
         wrongAnswer: '3px solid red',
       },
+      hasNextBtn: true,
       });
     }
 
@@ -141,11 +160,23 @@ class Game extends Component {
 
     render() {
       const { isLoading } = this.props;
+      const { hasNextBtn } = this.state;
       return (
         <div>
           <Header />
           {
             !isLoading && this.renderQuestion()
+          }
+          {
+            hasNextBtn && (
+              <button
+                data-testid="btn-next"
+                onClick={ this.showNextQuestion }
+                type="button"
+              >
+                Next
+              </button>
+            )
           }
         </div>
       );

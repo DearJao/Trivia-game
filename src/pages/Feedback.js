@@ -4,14 +4,9 @@ import PropTypes from 'prop-types';
 import Header from '../components/Header';
 
 class Feedback extends Component {
-  handleButton = () => {
-    const { history } = this.props;
-    history.push('/');
-  };
-
   render() {
     const minimumScore = 3;
-    const { score, assertions } = this.props;
+    const { score, assertions, history } = this.props;
 
     return (
       <div>
@@ -24,10 +19,9 @@ class Feedback extends Component {
         <button
           type="button"
           data-testid="btn-play-again"
-          onClick={ this.handleButton }
+          onClick={ () => history.push('/') }
         >
           Play Again
-
         </button>
       </div>
     );

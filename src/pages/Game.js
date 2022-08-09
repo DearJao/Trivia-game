@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Header from '../components/Header';
-import { doFetchQuestions, updateScore } from '../redux/actions';
+import { doFetchQuestions, timerReset, updateScore } from '../redux/actions';
 import { URL_GET_QUESTIONS } from '../utils/constants';
 import Timer from '../components/Timer';
 
@@ -50,12 +50,19 @@ class Game extends Component {
   }
 
   showNextQuestion = () => {
-    this.setState((PrevState) => ({
-      activeIndex: PrevState.activeIndex + 1,
-      hasNextBtn: false,
-    }), () => {
-      this.redirectToFeedback();
-    });
+    const { activeIndex } = this.state;
+    const { timerResetDispatch } = this.props;
+    if (activeIndex <= MAX_INDEX) {
+      timerResetDispatch();
+      this.setState((PrevState) => ({
+        activeIndex: PrevState.activeIndex + 1,
+        hasNextBtn: false,
+        borderColor: {
+          correctAnswer: '',
+          wrongAnswer: '',
+        },
+      }))
+    } else { this.redirectToFeedback() }
   }
 
   redirectToFeedback = () => {
@@ -70,7 +77,6 @@ class Game extends Component {
     const { activeIndex } = this.state;
     const { questions } = this.props;
     const { results } = questions;
-    console.log(results[activeIndex]);
 
     if (!results.length) {
       return null;
@@ -177,28 +183,29 @@ class Game extends Component {
     );
   }
 
-render() {
-  const { isLoading } = this.props;
-  const { hasNextBtn } = this.state;
-  return (
-    <div>
-      <Header />
-      {
-        !isLoading && this.renderQuestion()
-      }
-      {
-        hasNextBtn && (
-          <button
-            data-testid="btn-next"
-            onClick={ this.showNextQuestion }
-            type="button"
-          >
-            Next
-          </button>
-        )
-      }
-    </div>
-  );
+  render() {
+    const { isLoading } = this.props;
+    const { hasNextBtn } = this.state;
+    return (
+      <div>
+        <Header />
+        {
+          !isLoading && this.renderQuestion()
+        }
+        {
+          hasNextBtn && (
+            <button
+              data-testid="btn-next"
+              onClick={ this.showNextQuestion }
+              type="button"
+            >
+              Next
+            </button>
+          )
+        }
+      </div>
+    );
+  }
 }
 
 Game.propTypes = {
@@ -221,6 +228,7 @@ Game.defaultProps = {
 const mapDispatchToProps = (dispatch) => ({
   onFecthQuestions: (url) => dispatch(doFetchQuestions(url)),
   updateScoreDispatch: (newScore) => dispatch(updateScore(newScore)),
+  timerResetDispatch: () => dispatch(timerReset()),
 });
 
 const mapStateToProps = (state) => ({

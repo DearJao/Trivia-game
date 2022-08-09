@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { timerDecreasing, timerReset } from '../redux/actions';
+import { timerDecreasing } from '../redux/actions';
 
 class Timer extends React.Component {
   componentDidMount() {
@@ -15,8 +15,6 @@ class Timer extends React.Component {
   }
 
   resetTimer = () => {
-    const { timerResetDispatch } = this.props;
-    timerResetDispatch();
     clearInterval(this.timer);
     return 0;
   }
@@ -49,7 +47,6 @@ const mapStateToProps = (store) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   timerDecreasingDispatch: () => dispatch(timerDecreasing()),
-  timerResetDispatch: () => dispatch(timerReset()),
 });
 
 

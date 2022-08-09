@@ -51,8 +51,9 @@ class Game extends Component {
   renderQuestion = () => {
     const { activeIndex } = this.state;
     const { questions } = this.props;
-    // console.log(questions);
     const { results } = questions;
+    console.log(results[activeIndex]);
+
     if (!results.length) {
       return null;
     }

@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import Header from '../components/Header';
 import { doFetchQuestions } from '../redux/actions';
 import { URL_GET_QUESTIONS } from '../utils/constants';
+import Timer from '../components/Timer';
 
 class Game extends Component {
   constructor(props) {
@@ -15,6 +16,7 @@ class Game extends Component {
         correctAnswer: '',
         wrongAnswer: '',
       },
+      disableButton: false,
     };
   }
 
@@ -49,7 +51,7 @@ class Game extends Component {
   renderQuestion = () => {
     const { activeIndex } = this.state;
     const { questions } = this.props;
-    console.log(questions);
+    // console.log(questions);
     const { results } = questions;
     if (!results.length) {
       return null;
@@ -58,6 +60,7 @@ class Game extends Component {
       <section>
         <h2 data-testid="question-category">{ results[activeIndex].category }</h2>
         <h3 data-testid="question-text">{ results[activeIndex].question }</h3>
+        <Timer counter={ this.counter } />
         <div data-testid="answer-options">
           {
             this.getSortedAnswers(results[activeIndex]).map((answer, indexAnswer) => {
@@ -80,6 +83,16 @@ class Game extends Component {
       });
     }
 
+    timeOut = () => {
+      this.setState({ disableButton: true });
+      this.handleAnswer();
+    }
+
+    counter = () => {
+      const thirtySeconds = 30000;
+      setTimeout(this.timeOut, thirtySeconds);
+    }
+
     handleLogout() {
       const { history } = this.props;
       localStorage.removeItem('token');
@@ -96,10 +109,11 @@ class Game extends Component {
     }
 
     renderBtn(bool, str, number) {
-      const { borderColor: { correctAnswer, wrongAnswer } } = this.state;
+      const { borderColor: { correctAnswer, wrongAnswer }, disableButton } = this.state;
       if (bool) {
         return (
           <button
+            disabled={ disableButton }
             onClick={ this.handleAnswer }
             style={ { border: correctAnswer } }
             key={ number }
@@ -113,6 +127,7 @@ class Game extends Component {
       }
       return (
         <button
+          disabled={ disableButton }
           onClick={ this.handleAnswer }
           style={ { border: wrongAnswer } }
           key={ number }

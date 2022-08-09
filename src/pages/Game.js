@@ -81,7 +81,7 @@ class Game extends Component {
         <Timer counter={ this.counter } />
         <div data-testid="answer-options">
           {
-            this.getSortedAnswers(results[activeIndex]).map((answer, indexAnswer) => {
+            results[activeIndex].sortedAnswersList.map((answer, indexAnswer) => {
               if (answer === results[activeIndex].correct_answer) {
                 return this.renderBtn(true, answer, indexAnswer);
               }

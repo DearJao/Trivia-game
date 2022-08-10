@@ -31,7 +31,7 @@ class Feedback extends Component {
         <p data-testid="feedback-total-score">{ score }</p>
         <p data-testid="feedback-total-question">{ assertions }</p>
         <p data-testid="feedback-text">
-          { score < minimumScore ? 'Could be better...' : 'Well Done!' }
+          { assertions < minimumScore ? 'Could be better...' : 'Well Done!' }
         </p>
         <button
           type="button"

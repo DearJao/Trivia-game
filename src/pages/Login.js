@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { executeLogin } from '../redux/actions';
+import { executeLogin, updateScore } from '../redux/actions';
 
 const URL = 'https://opentdb.com/api_token.php?command=request';
 
@@ -15,6 +15,11 @@ class Login extends Component {
       isNameValid: false,
       isEmailValid: false,
     };
+  }
+
+  componentDidMount() {
+    const { updateScoreDispatch } = this.props;
+    updateScoreDispatch(0);
   }
 
   setDisableSaveButton() {
@@ -127,6 +132,7 @@ class Login extends Component {
 
 Login.propTypes = {
   login: PropTypes.func.isRequired,
+  updateScoreDispatch: PropTypes.func.isRequired,
   history: PropTypes.shape({
     push: PropTypes.func,
   }).isRequired,
@@ -134,6 +140,7 @@ Login.propTypes = {
 
 const mapDispatchToProps = (dispatch) => ({
   login: (name, email) => dispatch(executeLogin(name, email)),
+  updateScoreDispatch: (newScore) => dispatch(updateScore(newScore)),
 });
 
 export default connect(null, mapDispatchToProps)(Login);

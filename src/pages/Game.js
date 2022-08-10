@@ -26,7 +26,6 @@ class Game extends Component {
   shouldComponentUpdate(nextProps, nextState) {
     const { isInvalid } = nextProps;
     const { activeIndex } = nextState;
-    console.log(isInvalid);
     if (isInvalid) {
       this.handleLogout();
       return false;
@@ -148,8 +147,6 @@ class Game extends Component {
   handleFetchQuestions() {
     const { onFecthQuestions } = this.props;
     const TOKEN = localStorage.getItem('token');
-    // const TOKEN_INVALID = 'INVALID';
-    console.log(TOKEN);
     const URL_QUESTIONS = URL_GET_QUESTIONS + TOKEN;
     onFecthQuestions(URL_QUESTIONS);
   }

@@ -20,9 +20,8 @@ class Ranking extends Component {
   render() {
     const { history } = this.props;
     const { rankingLocalStorage } = this.state;
-
-    rankingLocalStorage.sort((a, b) => a.score - b.score);
-
+    console.log(rankingLocalStorage);
+    rankingLocalStorage.sort((a, b) => b.score - a.score);
     console.log(rankingLocalStorage);
 
     return (
@@ -30,18 +29,17 @@ class Ranking extends Component {
         { rankingLocalStorage.length > 0 ? (
           <div>
             <h2 data-testid="ranking-title">Ranking Geral</h2>
-            { rankingLocalStorage.map((item) => (
+            { rankingLocalStorage.map((item, index) => (
               <div key={ item.email }>
                 <img
                   data-testid="header-profile-picture"
                   src={ this.getURL(item.email) }
                   alt="Avatar"
                 />
-                <p data-testid={ `player-name-${item.name}` }>
+                <p data-testid={ `player-name-${index}` }>
                   { item.name }
                 </p>
-                <p data-testid={ `player-score-${item.score}` }>
-                  Score:
+                <p data-testid={ `player-score-${index}` }>
                   { item.score }
                 </p>
               </div>

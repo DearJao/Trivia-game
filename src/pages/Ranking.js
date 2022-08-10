@@ -60,9 +60,6 @@ class Ranking extends Component {
   }
 }
 
-// data-testid={ `player-name-${aaaa}` }
-// data-testid={ `player-score-${aaaa}` }
-
 Ranking.propTypes = {
   history: PropTypes.shape({
     push: PropTypes.func,

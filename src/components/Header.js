@@ -8,7 +8,7 @@ class Header extends Component {
     super();
     this.state = {
       gravatar: '',
-    }
+    };
   }
 
   componentDidMount() {
@@ -17,7 +17,7 @@ class Header extends Component {
     const URL = `https://www.gravatar.com/avatar/${hash}`;
     this.setState({
       gravatar: URL,
-    })
+    });
   }
 
   render() {

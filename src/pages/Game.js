@@ -61,8 +61,8 @@ class Game extends Component {
           correctAnswer: '',
           wrongAnswer: '',
         },
-      }))
-    } else { this.redirectToFeedback() }
+      }));
+    } else this.redirectToFeedback();
   }
 
   redirectToFeedback = () => {
@@ -101,7 +101,8 @@ class Game extends Component {
   }
 
   handleAnswer = (event) => {
-    const userAnswer = event.target.innerHTML
+    const SCORE_COEFFICIENT = 10;
+    const userAnswer = event.target.innerHTML;
     const { activeIndex } = this.state;
     const { questions } = this.props;
     const { results } = questions;
@@ -109,17 +110,16 @@ class Game extends Component {
     const difficulty = {
       easy: 1,
       medium: 2,
-      hard: 3
+      hard: 3,
     };
+    if (corretAnswer === userAnswer) {
+      const { timer, score, updateScoreDispatch } = this.props;
+      const newScore = score + SCORE_COEFFICIENT
+        + (difficulty[results[activeIndex].difficulty] * timer);
+      updateScoreDispatch(newScore);
+    }
 
-  if (corretAnswer === userAnswer) {
-    const { timer, score, updateScoreDispatch } = this.props;
-
-    const newScore = score + 10 + (difficulty[results[activeIndex].difficulty] * timer );
-    updateScoreDispatch(newScore);
-  }
-
-  this.setState({ borderColor: {
+    this.setState({ borderColor: {
       correctAnswer: '3px solid rgb(6, 240, 15)',
       wrongAnswer: '3px solid red',
     },
@@ -219,6 +219,10 @@ Game.propTypes = {
   isLoading: PropTypes.bool.isRequired,
   results: PropTypes.arrayOf(PropTypes.object),
   isInvalid: PropTypes.bool.isRequired,
+  timerResetDispatch: PropTypes.func.isRequired,
+  timer: PropTypes.number.isRequired,
+  score: PropTypes.number.isRequired,
+  updateScoreDispatch: PropTypes.func.isRequired,
 };
 
 Game.defaultProps = {

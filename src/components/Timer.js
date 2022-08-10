@@ -23,7 +23,7 @@ class Timer extends React.Component {
     const { timerDecreasingDispatch } = this.props;
     const oneSecond = 1000;
     this.timer = setInterval(() => {
-      timerDecreasingDispatch()
+      timerDecreasingDispatch();
     }, oneSecond);
   }
 
@@ -39,6 +39,8 @@ class Timer extends React.Component {
 
 Timer.propTypes = {
   counter: PropTypes.func.isRequired,
+  timerDecreasingDispatch: PropTypes.func.isRequired,
+  timer: PropTypes.number.isRequired,
 };
 
 const mapStateToProps = (store) => ({
@@ -48,6 +50,5 @@ const mapStateToProps = (store) => ({
 const mapDispatchToProps = (dispatch) => ({
   timerDecreasingDispatch: () => dispatch(timerDecreasing()),
 });
-
 
 export default connect(mapStateToProps, mapDispatchToProps)(Timer);

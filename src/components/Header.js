@@ -20,10 +20,10 @@ class Header extends Component {
         >
           { name }
         </p>
+        <p>Score:</p>
         <p
           data-testid="header-score"
         >
-          Score:
           { score }
         </p>
       </header>

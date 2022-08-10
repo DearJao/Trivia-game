@@ -24,7 +24,7 @@ class Header extends Component {
     const { name, score } = this.props;
     const { gravatar } = this.state;
     return (
-      <header>
+      <div>
         <img
           data-testid="header-profile-picture"
           src={ gravatar }
@@ -41,7 +41,7 @@ class Header extends Component {
           Score:
           { score }
         </p>
-      </header>
+      </div>
     );
   }
 }

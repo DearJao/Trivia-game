@@ -52,14 +52,6 @@ class Game extends Component {
     timerResetDispatch();
   }
 
-  getSortedAnswers(item) {
-    const sortFactor = 0.5;
-    const { correct_answer: correctAnswer, incorrect_answers: incorrectAnswers } = item;
-    const answersList = [correctAnswer, ...incorrectAnswers];
-    const sortedAnswersList = answersList.sort(() => Math.random() - sortFactor);
-    return sortedAnswersList;
-  }
-
   showNextQuestion = () => {
     this.setState((PrevState) => ({ borderColor: {
       correctAnswer: '',

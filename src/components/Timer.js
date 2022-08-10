@@ -2,12 +2,21 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { timerDecreasing } from '../redux/actions';
+import { MAX_INDEX } from '../utils/constants';
 
 class Timer extends React.Component {
   componentDidMount() {
-    const { counter } = this.props;
     this.count();
-    counter();
+  }
+
+  componentDidUpdate(prevProps) {
+    const { activeIndex, hasToStop } = this.props;
+    if (activeIndex <= MAX_INDEX && activeIndex !== prevProps.activeIndex) {
+      this.count();
+    }
+    if (hasToStop && hasToStop !== prevProps.hasToStop) {
+      this.resetTimer();
+    }
   }
 
   componentWillUnmount() {
@@ -38,9 +47,10 @@ class Timer extends React.Component {
 }
 
 Timer.propTypes = {
-  counter: PropTypes.func.isRequired,
   timerDecreasingDispatch: PropTypes.func.isRequired,
   timer: PropTypes.number.isRequired,
+  activeIndex: PropTypes.number.isRequired,
+  hasToStop: PropTypes.bool.isRequired,
 };
 
 const mapStateToProps = (store) => ({

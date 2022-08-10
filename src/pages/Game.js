@@ -3,17 +3,13 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Header from '../components/Header';
 import { doFetchQuestions, timerReset, updateScore } from '../redux/actions';
-import { URL_GET_QUESTIONS, difficultyScale } from '../utils/constants';
+import { URL_GET_QUESTIONS, difficultyScale, MAX_INDEX } from '../utils/constants';
 import Timer from '../components/Timer';
-
-const MAX_INDEX = 4;
 
 class Game extends Component {
   constructor(props) {
     super(props);
-
-    this.state = {
-      activeIndex: 0,
+    this.state = { activeIndex: 0,
       borderColor: {
         correctAnswer: '',
         wrongAnswer: '',
@@ -41,6 +37,22 @@ class Game extends Component {
     return true;
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    const { timer, timerResetDispatch } = this.props;
+    const { activeIndex } = this.state;
+    if (timer === 0 && timer !== prevProps.timer) {
+      this.timeOut();
+    }
+    if (activeIndex <= MAX_INDEX && activeIndex !== prevState.activeIndex) {
+      timerResetDispatch();
+    }
+  }
+
+  componentWillUnmount() {
+    const { timerResetDispatch } = this.props;
+    timerResetDispatch();
+  }
+
   getSortedAnswers(item) {
     const sortFactor = 0.5;
     const { correct_answer: correctAnswer, incorrect_answers: incorrectAnswers } = item;
@@ -50,19 +62,15 @@ class Game extends Component {
   }
 
   showNextQuestion = () => {
-    const { activeIndex } = this.state;
-    const { timerResetDispatch } = this.props;
-    if (activeIndex <= MAX_INDEX) {
-      timerResetDispatch();
-      this.setState((PrevState) => ({
-        activeIndex: PrevState.activeIndex + 1,
-        hasNextBtn: false,
-        borderColor: {
-          correctAnswer: '',
-          wrongAnswer: '',
-        },
-      }));
-    } else this.redirectToFeedback();
+    this.setState((PrevState) => ({ borderColor: {
+      correctAnswer: '',
+      wrongAnswer: '',
+    },
+    hasNextBtn: false,
+    disableButton: false,
+    activeIndex: PrevState.activeIndex + 1 }), () => {
+      this.redirectToFeedback();
+    });
   }
 
   redirectToFeedback = () => {
@@ -74,14 +82,14 @@ class Game extends Component {
   }
 
   renderQuestion = () => {
-    const { activeIndex } = this.state;
+    const { activeIndex, hasNextBtn } = this.state;
     const { questions } = this.props;
     const { results } = questions;
     const {
       correct_answer: correctAnswer,
       difficulty,
     } = results[activeIndex];
-    const answerObj = { correctAnswer, difficulty };
+    const validAnswerObj = { correctAnswer, difficulty };
     if (!results.length) {
       return null;
     }
@@ -89,14 +97,14 @@ class Game extends Component {
       <section>
         <h2 data-testid="question-category">{ results[activeIndex].category }</h2>
         <h3 data-testid="question-text">{ results[activeIndex].question }</h3>
-        <Timer counter={ this.counter } />
+        <Timer activeIndex={ activeIndex } hasToStop={ hasNextBtn } />
         <div data-testid="answer-options">
           {
             results[activeIndex].sortedAnswersList.map((answer, indexAnswer) => {
               if (answer === correctAnswer) {
-                return this.renderBtn(true, answer, indexAnswer, answerObj);
+                return this.renderBtn(true, answer, indexAnswer, validAnswerObj);
               }
-              return this.renderBtn(false, answer, indexAnswer, answerObj);
+              return this.renderBtn(false, answer, indexAnswer, validAnswerObj);
             })
           }
         </div>
@@ -104,23 +112,21 @@ class Game extends Component {
     );
   }
 
-  handleAnswer = (event, answerObj) => {
-    const { correctAnswer, difficulty } = answerObj;
+  handleAnswer = (answer, validAnswerObj) => {
+    const { correctAnswer, difficulty } = validAnswerObj;
+    const { timer, score, updateScoreDispatch, timerResetDispatch } = this.props;
     const SCORE_COEFFICIENT = 10;
-    const userAnswer = event.target.innerHTML;
-    if (correctAnswer === userAnswer) {
-      const { timer, score, updateScoreDispatch } = this.props;
+    if (correctAnswer === answer) {
       const newScore = score + SCORE_COEFFICIENT
         + (difficultyScale[difficulty] * timer);
       updateScoreDispatch(newScore);
     }
-
     this.setState({ borderColor: {
       correctAnswer: '3px solid rgb(6, 240, 15)',
       wrongAnswer: '3px solid red',
     },
     hasNextBtn: true,
-    });
+    }, () => timerResetDispatch(timer));
   }
 
   timeOut = () => {
@@ -131,12 +137,6 @@ class Game extends Component {
       },
       hasNextBtn: true,
     });
-    // this.handleAnswer();
-  }
-
-  counter = () => {
-    const thirtySeconds = 30000;
-    setTimeout(this.timeOut, thirtySeconds);
   }
 
   handleLogout() {
@@ -154,27 +154,26 @@ class Game extends Component {
     onFecthQuestions(URL_QUESTIONS);
   }
 
-  renderBtn(bool, str, number, answerObj) {
+  renderBtn(bool, str, number, validAnswerObj) {
     const { borderColor: { correctAnswer, wrongAnswer }, disableButton } = this.state;
     if (bool) {
       return (
         <button
           disabled={ disableButton }
-          onClick={ (ev) => this.handleAnswer(ev, answerObj) }
+          onClick={ () => this.handleAnswer(str, validAnswerObj) }
           style={ { border: correctAnswer } }
           key={ number }
           type="button"
           data-testid="correct-answer"
         >
           { str }
-
         </button>
       );
     }
     return (
       <button
         disabled={ disableButton }
-        onClick={ (ev) => this.handleAnswer(ev, answerObj) }
+        onClick={ () => this.handleAnswer(str, validAnswerObj) }
         style={ { border: wrongAnswer } }
         key={ number }
         type="button"
@@ -191,9 +190,7 @@ class Game extends Component {
     return (
       <div>
         <Header />
-        {
-          !isLoading && this.renderQuestion()
-        }
+        { !isLoading && this.renderQuestion() }
         {
           hasNextBtn && (
             <button
@@ -234,7 +231,7 @@ Game.defaultProps = {
 const mapDispatchToProps = (dispatch) => ({
   onFecthQuestions: (url) => dispatch(doFetchQuestions(url)),
   updateScoreDispatch: (newScore) => dispatch(updateScore(newScore)),
-  timerResetDispatch: () => dispatch(timerReset()),
+  timerResetDispatch: (time) => dispatch(timerReset(time)),
 });
 
 const mapStateToProps = (state) => ({

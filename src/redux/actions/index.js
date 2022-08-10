@@ -38,8 +38,9 @@ export const timerDecreasing = () => ({
   type: actionTypes.TIMER_DECREASING,
 });
 
-export const timerReset = () => ({
+export const timerReset = (time) => ({
   type: actionTypes.TIMER_RESET,
+  payload: time,
 });
 
 export const updateScore = (newScore) => ({

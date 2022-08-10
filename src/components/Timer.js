@@ -1,18 +1,22 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { timerDecreasing } from '../redux/actions';
+import { MAX_INDEX } from '../utils/constants';
 
 class Timer extends React.Component {
-  constructor() {
-    super();
-    this.state = {
-      seconds: 30,
-    };
+  componentDidMount() {
+    this.count();
   }
 
-  componentDidMount() {
-    const { counter } = this.props;
-    this.count();
-    counter();
+  componentDidUpdate(prevProps) {
+    const { activeIndex, hasToStop } = this.props;
+    if (activeIndex <= MAX_INDEX && activeIndex !== prevProps.activeIndex) {
+      this.count();
+    }
+    if (hasToStop && hasToStop !== prevProps.hasToStop) {
+      this.resetTimer();
+    }
   }
 
   componentWillUnmount() {
@@ -24,25 +28,37 @@ class Timer extends React.Component {
     return 0;
   }
 
-    count = () => {
-      const oneSecond = 1000;
-      this.timer = setInterval(() => {
-        this.setState((state) => ({ seconds: state.seconds - 1 }));
-      }, oneSecond);
-    }
+  count = () => {
+    const { timerDecreasingDispatch } = this.props;
+    const oneSecond = 1000;
+    this.timer = setInterval(() => {
+      timerDecreasingDispatch();
+    }, oneSecond);
+  }
 
-    render() {
-      const { seconds } = this.state;
-      return (
-        <div>
-          { seconds === 0 ? this.resetTimer() : seconds }
-        </div>
-      );
-    }
+  render() {
+    const { timer } = this.props;
+    return (
+      <div>
+        { timer === 0 ? this.resetTimer() : timer }
+      </div>
+    );
+  }
 }
 
 Timer.propTypes = {
-  counter: PropTypes.func.isRequired,
+  timerDecreasingDispatch: PropTypes.func.isRequired,
+  timer: PropTypes.number.isRequired,
+  activeIndex: PropTypes.number.isRequired,
+  hasToStop: PropTypes.bool.isRequired,
 };
 
-export default Timer;
+const mapStateToProps = (store) => ({
+  timer: store.player.timer,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  timerDecreasingDispatch: () => dispatch(timerDecreasing()),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Timer);

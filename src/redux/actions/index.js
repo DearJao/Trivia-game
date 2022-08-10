@@ -33,3 +33,17 @@ export function doFetchQuestions(url) {
       });
   };
 }
+
+export const timerDecreasing = () => ({
+  type: actionTypes.TIMER_DECREASING,
+});
+
+export const timerReset = (time) => ({
+  type: actionTypes.TIMER_RESET,
+  payload: time,
+});
+
+export const updateScore = (newScore) => ({
+  type: actionTypes.SCORE_UPDATE,
+  payload: newScore,
+});

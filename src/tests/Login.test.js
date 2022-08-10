@@ -1,7 +1,7 @@
 import React from 'react';
-import App from '../../App';
+import App from '../App';
 import { screen, waitFor } from '@testing-library/react';
-import { renderWithRouterAndRedux } from './renderWithRouterAndRedux';
+import { renderWithRouterAndRedux } from './helpers/renderWithRouterAndRedux';
 import userEvent from '@testing-library/user-event';
 
 describe('Desenvolva testes para atingir 90% de cobertura da tela de Login', () => {

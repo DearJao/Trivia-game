@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-// import { withRouter } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import Header from '../components/Header';
 import { doFetchQuestions, timerReset, updateScore } from '../redux/actions';
 import { URL_GET_QUESTIONS, difficultyScale, MAX_INDEX } from '../utils/constants';
@@ -240,4 +240,4 @@ const mapStateToProps = (state) => ({
   score: state.player.score,
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Game);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Game));

@@ -56,6 +56,13 @@ describe('Desenvolva testes para atingir 90% de cobertura da tela de Ranking', (
 
     expect(history.location.pathname).toBe('/');
   });
+
+  test('Deve mostrar a mensagem "nenhum raking encontrado" se não houver uma chave "ranking" no localStorage', () => {
+    localStorage.removeItem('ranking');
+    renderWithRouterAndRedux(<Ranking />);
+    const emptyRanking = screen.getByText(/nenhum raking encontrado/i);
+    expect(emptyRanking).toBeInTheDocument();
+  });
 });
 
 // src/pages/Ranking.js

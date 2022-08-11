@@ -55,4 +55,4 @@ export const difficultyScale = {
 };
 
 export const MAX_INDEX = 4;
-export const INITIAL_TIME = 1;
+export const INITIAL_TIME = 30;

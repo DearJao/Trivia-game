@@ -1,8 +1,8 @@
 import React from 'react';
-import App from '../../App';
 import { screen, waitFor } from '@testing-library/react';
-import { renderWithRouterAndRedux } from './renderWithRouterAndRedux';
+import renderWithRouterAndRedux from './helpers/renderWithRouterAndRedux';
 import userEvent from '@testing-library/user-event';
+import App from '../App';
 
 describe('Desenvolva testes para atingir 90% de cobertura da tela de Login', () => {
   test('se existe um h2 com login', () => {
@@ -55,8 +55,8 @@ describe('Desenvolva testes para atingir 90% de cobertura da tela de Login', () 
     expect(btnPlay).not.toBeDisabled();
 
     userEvent.click(btnPlay)
-    expect(history.location.pathname).toBe('/game')
     await waitFor(() => expect(global.fetch).toHaveBeenCalled());
+    expect(history.location.pathname).toBe('/game')
   });
   test('o funcionamento do botão Settings', () => {
     const { history } = renderWithRouterAndRedux(<App />)

@@ -13,12 +13,12 @@ const INITIAL_STATE = {
     gravatarEmail: 'jonas@gmail.com',
     score: 0,
     assertions: 0,
-    timer: 30
+    timer: 30,
   },
   api: {
     isLoading: true,
     questions: {},
-    isTokenInvalid: false
+    isTokenInvalid: false,
   }
 };
 

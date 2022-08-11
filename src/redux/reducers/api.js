@@ -5,7 +5,8 @@ import getQuestionsWithSortedAnswers from '../../utils/helperFunctions';
 const INITIAL_STATE = {
   isLoading: true,
   questions: {},
-  isInvalid: false,
+  isTokenInvalid: false,
+  error: '',
 };
 
 const apiReducer = (state = INITIAL_STATE, action) => {
@@ -15,6 +16,7 @@ const apiReducer = (state = INITIAL_STATE, action) => {
     return {
       ...state,
       isLoading: true,
+      error: '',
     };
   case actionTypes.FETCH_SUCCESS_QUESTIONS:
     return {
@@ -24,7 +26,14 @@ const apiReducer = (state = INITIAL_STATE, action) => {
         ...action.payload,
         results: [...getQuestionsWithSortedAnswers(action.payload.results)],
       },
-      isInvalid: action.payload.response_code === invalidCode,
+      isTokenInvalid: action.payload.response_code === invalidCode,
+      error: '',
+    };
+
+  case actionTypes.FETCH_FAILURE:
+    return {
+      ...state,
+      error: action.payload,
     };
   default:
     return state;

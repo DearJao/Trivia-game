@@ -1,24 +1,25 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Header from '../components/Header';
 
 class Feedback extends Component {
   componentDidMount() {
-    const { score, name, email } = this.props;
-    const scoreToRanking = {
-      name,
-      score,
-      email,
-    };
-
     const ranking = JSON.parse(localStorage.getItem('ranking')) || [];
-    const arrOfObj = [
-      ...ranking,
-      scoreToRanking,
-    ];
-    console.log(arrOfObj);
-    localStorage.setItem('ranking', JSON.stringify(arrOfObj));
+    const { score, name, email } = this.props;
+    if (name && email) {
+      const scoreToRanking = {
+        name,
+        score,
+        email,
+      };
+      const arrOfObj = [
+        ...ranking,
+        scoreToRanking,
+      ];
+      localStorage.setItem('ranking', JSON.stringify(arrOfObj));
+    }
   }
 
   render() {
@@ -53,8 +54,14 @@ class Feedback extends Component {
 }
 
 Feedback.propTypes = {
-  score: PropTypes.number,
-}.isRequired;
+  score: PropTypes.number.isRequired,
+  name: PropTypes.string.isRequired,
+  email: PropTypes.string.isRequired,
+  assertions: PropTypes.number.isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.func,
+  }).isRequired,
+};
 
 const mapStateToProps = (store) => ({
   score: store.player.score,
@@ -63,4 +70,4 @@ const mapStateToProps = (store) => ({
   email: store.player.gravatarEmail,
 });
 
-export default connect(mapStateToProps)(Feedback);
+export default connect(mapStateToProps)(withRouter(Feedback));

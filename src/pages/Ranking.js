@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import md5 from 'crypto-js/md5';
+import { withRouter } from 'react-router-dom';
 
 class Ranking extends Component {
   constructor() {
@@ -20,9 +21,9 @@ class Ranking extends Component {
   render() {
     const { history } = this.props;
     const { rankingLocalStorage } = this.state;
-    console.log(rankingLocalStorage);
+    // console.log(rankingLocalStorage);
     rankingLocalStorage.sort((a, b) => b.score - a.score);
-    console.log(rankingLocalStorage);
+    // console.log(rankingLocalStorage);
 
     return (
       <div>
@@ -30,7 +31,7 @@ class Ranking extends Component {
           <div>
             <h2 data-testid="ranking-title">Ranking Geral</h2>
             { rankingLocalStorage.map((item, index) => (
-              <div key={ item.email }>
+              <div key={ index }>
                 <img
                   data-testid="header-profile-picture"
                   src={ this.getURL(item.email) }
@@ -71,4 +72,4 @@ const mapStateToProps = (store) => ({
   score: store.player.score,
 });
 
-export default connect(mapStateToProps)(Ranking);
+export default connect(mapStateToProps)(withRouter(Ranking));

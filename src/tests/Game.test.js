@@ -19,7 +19,7 @@ const INITIAL_STATE = {
     isLoading: true,
     questions: {},
     isTokenInvalid: false,
-  }
+  },
 };
 
 const { results } = successResponse;
@@ -136,7 +136,7 @@ describe('Testando o timer das questões', () => {
         questions: {},
         isTokenInvalid: false,
         error: '',
-      }
+      },
     };
     renderWithRouterAndRedux(<Game />,
       INITIAL_STATE,
@@ -173,7 +173,7 @@ describe('Testando se a pagina Game volta para o inicio caso o token seja invali
         isLoading: true,
         questions: {},
         isTokenInvalid: false,
-      }
+      },
     };
     const { history } = renderWithRouterAndRedux(<Game />,
       INITIAL_STATE,

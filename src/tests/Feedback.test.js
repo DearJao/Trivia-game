@@ -1,40 +1,38 @@
 import React from 'react';
 import '@testing-library/jest-dom';
-import { screen, waitFor } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import renderWithRouterAndRedux from './helpers/renderWithRouterAndRedux';
 import userEvent from '@testing-library/user-event';
 import Feedback from '../pages/Feedback';
 
-const FEEDBACK_TEXT_SELECTOR = '[data-testid="feedback-text"]';
-const BUTTON_PLAY_AGAIN_SELECTOR = '[data-testid="btn-play-again"]';
-const BUTTON_RANKING_SELECTOR = '[data-testid="btn-ranking"]';
-const FEEDBACK_TOTAL_QUESTION_SELECTOR = '[data-testid="feedback-total-question"]';
-const FEEDBACK_TOTAL_SCORE_SELECTOR = '[data-testid="feedback-total-score"]';
+const FEEDBACK_TEXT_SELECTOR = 'feedback-text';
+const FEEDBACK_TOTAL_QUESTION_SELECTOR = 'feedback-total-question';
+const FEEDBACK_TOTAL_SCORE_SELECTOR = 'feedback-total-score';
 
 const PLAYER_NAME = 'Nome da pessoa';
 const PLAYER_EMAIL = 'email@pessoa.com';
-const SCORE = "50";
-const ASSERTIONS = "3";
-const MIN_ASSERTIONS = 3;
+const SCORE = 50;
+const ASSERTIONS = 3;
 const ROUTE = '/feedback';
-const initialState = {
-  player: {
-    name: PLAYER_NAME,
-    gravatarEmail: PLAYER_EMAIL,
-    score: SCORE,
-    assertions: ASSERTIONS,
-  },
-}
 
 const getElemByTestId = (testId) => screen.getByTestId(testId);
 const getBtn = (text) => screen.getByRole('button', { name: text });
 
 describe('Testando a página de Feedback', () => {
   describe('Testando a presença de elementos na página', () => {
-    beforeEach(() => renderWithRouterAndRedux(<Feedback />, initialState, ROUTE));
+    // beforeEach(() => renderWithRouterAndRedux(<Feedback />, initialState, ROUTE));
     it('deve aparecer na tela os elementos contendo os pontos e a quantidade de respostas corretas', () => {
-      expect(getElemByTestId(FEEDBACK_TOTAL_SCORE_SELECTOR)).toHaveTextContent(SCORE);
-      expect(getElemByTestId(FEEDBACK_TOTAL_QUESTION_SELECTOR)).toHaveTextContent(ASSERTIONS);
+      const initialState = {
+        player: {
+          name: PLAYER_NAME,
+          gravatarEmail: PLAYER_EMAIL,
+          score: SCORE,
+          assertions: ASSERTIONS,
+        },
+      }
+      renderWithRouterAndRedux(<Feedback />, initialState, ROUTE);
+      expect(getElemByTestId(FEEDBACK_TOTAL_SCORE_SELECTOR)).toHaveTextContent('50');
+      expect(getElemByTestId(FEEDBACK_TOTAL_QUESTION_SELECTOR)).toHaveTextContent('3');
     });
   });
 
@@ -70,14 +68,31 @@ describe('Testando a página de Feedback', () => {
   
   describe('Testando os botões da página', () => {
     it('deve ir para a página inicial de Login ao clicar no botão "Play Again"', () => {
+      const initialState = {
+        player: {
+          name: PLAYER_NAME,
+          gravatarEmail: PLAYER_EMAIL,
+          score: SCORE,
+          assertions: ASSERTIONS,
+        },
+      }
       const { history } = renderWithRouterAndRedux(<Feedback />, initialState, ROUTE);
-      userEvent.click(getBtn("Play Again"));
+      console.log(history);
+      userEvent.click(screen.getByRole('button', { name: "Play Again" }));
       expect(history.location.pathname).toEqual('/');
     });
 
     it('deve ir para a página de Ranking ao clicar no botão "Ranking"', () => {
+      const initialState = {
+        player: {
+          name: PLAYER_NAME,
+          gravatarEmail: PLAYER_EMAIL,
+          score: SCORE,
+          assertions: ASSERTIONS,
+        },
+      }
       const { history } = renderWithRouterAndRedux(<Feedback />, initialState, ROUTE);
-      userEvent.click(getBtn("Ranking"));
+      userEvent.click(screen.getByRole('button', { name: "Ranking" }));
       expect(history.location.pathname).toEqual('/ranking');
     });
   });

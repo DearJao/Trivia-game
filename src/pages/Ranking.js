@@ -21,9 +21,9 @@ class Ranking extends Component {
   render() {
     const { history } = this.props;
     const { rankingLocalStorage } = this.state;
-    console.log(rankingLocalStorage);
+    // console.log(rankingLocalStorage);
     rankingLocalStorage.sort((a, b) => b.score - a.score);
-    console.log(rankingLocalStorage);
+    // console.log(rankingLocalStorage);
 
     return (
       <div>

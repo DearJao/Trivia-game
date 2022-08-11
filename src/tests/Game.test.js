@@ -1,7 +1,7 @@
 import React from 'react';
 import '@testing-library/jest-dom';
 import { screen, waitFor } from '@testing-library/react';
-import { renderWithRouterAndRedux } from './helpers/renderWithRouterAndRedux';
+import renderWithRouterAndRedux from './helpers/renderWithRouterAndRedux';
 import userEvent from '@testing-library/user-event';
 import Game from '../pages/Game';
 import { successResponse , invalidResponse } from './helpers/constants';

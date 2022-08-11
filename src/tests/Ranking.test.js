@@ -1,7 +1,7 @@
 import React from 'react';
 import Ranking from '../pages/Ranking';
 import { screen } from '@testing-library/react';
-import { renderWithRouterAndRedux } from './helpers/renderWithRouterAndRedux';
+import renderWithRouterAndRedux from './helpers/renderWithRouterAndRedux';
 import '@testing-library/jest-dom';
 import userEvent from '@testing-library/user-event';
 

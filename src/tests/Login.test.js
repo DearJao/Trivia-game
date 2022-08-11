@@ -1,7 +1,7 @@
 import React from 'react';
 import App from '../App';
 import { screen, waitFor } from '@testing-library/react';
-import { renderWithRouterAndRedux } from './helpers/renderWithRouterAndRedux';
+import renderWithRouterAndRedux from './helpers/renderWithRouterAndRedux';
 import userEvent from '@testing-library/user-event';
 
 describe('Desenvolva testes para atingir 90% de cobertura da tela de Login', () => {
@@ -10,12 +10,6 @@ describe('Desenvolva testes para atingir 90% de cobertura da tela de Login', () 
     const title = screen.getByRole('heading',
       {name: /login/i, level: 2});
     expect(title).toBeInTheDocument();
-  });
-  test('se existe uma img com logo', () => {
-    renderWithRouterAndRedux(<App />)
-    const logo = screen.getByRole('img',
-      { name: /logo/i });
-    expect(logo).toBeInTheDocument();
   });
   test('se existe o input de name', () => {
     renderWithRouterAndRedux(<App />)

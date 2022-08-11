@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { withRouter } from 'react-router-dom';
 import Header from '../components/Header';
 import { doFetchQuestions, timerReset, updateScore } from '../redux/actions';
 import { URL_GET_QUESTIONS, difficultyScale, MAX_INDEX } from '../utils/constants';
@@ -24,7 +25,7 @@ class Game extends Component {
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    const { isInvalid } = nextProps;
+    const { isInvalid, error } = nextProps;
     const { activeIndex } = nextState;
     if (isInvalid) {
       this.handleLogout();
@@ -33,6 +34,7 @@ class Game extends Component {
     if (activeIndex > MAX_INDEX) {
       return false;
     }
+    if (error) return false;
     return true;
   }
 
@@ -45,6 +47,10 @@ class Game extends Component {
     if (activeIndex <= MAX_INDEX && activeIndex !== prevState.activeIndex) {
       timerResetDispatch();
     }
+  }
+
+  componentDidCatch(error) {
+    console.log(error.message);
   }
 
   componentWillUnmount() {
@@ -211,10 +217,12 @@ Game.propTypes = {
   timer: PropTypes.number.isRequired,
   score: PropTypes.number.isRequired,
   updateScoreDispatch: PropTypes.func.isRequired,
+  error: PropTypes.string,
 };
 
 Game.defaultProps = {
   results: [],
+  error: '',
 };
 
 const mapDispatchToProps = (dispatch) => ({
@@ -226,9 +234,10 @@ const mapDispatchToProps = (dispatch) => ({
 const mapStateToProps = (state) => ({
   questions: state.api.questions,
   isLoading: state.api.isLoading,
-  isInvalid: state.api.isInvalid,
+  isInvalid: state.api.isTokenInvalid,
+  error: state.api.error,
   timer: state.player.timer,
   score: state.player.score,
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Game);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Game));

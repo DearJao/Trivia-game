@@ -39,7 +39,7 @@ class Timer extends React.Component {
   render() {
     const { timer } = this.props;
     return (
-      <div>
+      <div data-testid="timer">
         { timer === 0 ? this.resetTimer() : timer }
       </div>
     );

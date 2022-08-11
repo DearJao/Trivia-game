@@ -18,7 +18,6 @@ class Feedback extends Component {
         ...ranking,
         scoreToRanking,
       ];
-      console.log(arrOfObj);
       localStorage.setItem('ranking', JSON.stringify(arrOfObj));
     }
   }

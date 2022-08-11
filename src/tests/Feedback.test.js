@@ -77,7 +77,6 @@ describe('Testando a página de Feedback', () => {
         },
       }
       const { history } = renderWithRouterAndRedux(<Feedback />, initialState, ROUTE);
-      console.log(history);
       userEvent.click(screen.getByRole('button', { name: "Play Again" }));
       expect(history.location.pathname).toEqual('/');
     });

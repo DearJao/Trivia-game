@@ -3,6 +3,11 @@ export const invalidResponse = {
   results: [],
 };
 
+export const emptyResponse = {
+  response_code: 0,
+  results: [],
+}
+
 export const successResponse = {
   response_code: 0,
   results: [

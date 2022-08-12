@@ -49,10 +49,6 @@ class Game extends Component {
     }
   }
 
-  componentDidCatch(error) {
-    console.log(error.message);
-  }
-
   componentWillUnmount() {
     const { timerResetDispatch } = this.props;
     timerResetDispatch();
@@ -82,14 +78,14 @@ class Game extends Component {
     const { activeIndex, hasNextBtn } = this.state;
     const { questions } = this.props;
     const { results } = questions;
+    if (!results.length) {
+      return null;
+    }
     const {
       correct_answer: correctAnswer,
       difficulty,
     } = results[activeIndex];
     const validAnswerObj = { correctAnswer, difficulty };
-    if (!results.length) {
-      return null;
-    }
     return (
       <section>
         <h2 data-testid="question-category">{ results[activeIndex].category }</h2>

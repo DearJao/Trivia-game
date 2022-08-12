@@ -96,3 +96,21 @@ describe('Testando a página de Feedback', () => {
     });
   });
 });
+
+describe('Testando a pagina Feedback quanto ao uso do localStorage', () => {
+  it('nao deve chamar o metodo setItem do localStorage se o nome e email forem vazios', () => {
+    jest.spyOn(Storage.prototype, 'setItem');
+    Storage.prototype.setItem = jest.fn();
+    const initialState = {
+      player: {
+        name: '',
+        gravatarEmail: '',
+        score: SCORE,
+        assertions: ASSERTIONS,
+      },
+    }
+    renderWithRouterAndRedux(<Feedback />, initialState, ROUTE);
+    expect(localStorage.setItem).not.toHaveBeenCalled();
+    Storage.prototype.setItem.mockRestore();
+  });
+});

@@ -1,9 +1,9 @@
 import React from 'react';
-import Ranking from '../pages/Ranking';
-import { screen } from '@testing-library/react';
-import renderWithRouterAndRedux from './helpers/renderWithRouterAndRedux';
 import '@testing-library/jest-dom';
+import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import Ranking from '../pages/Ranking';
+import renderWithRouterAndRedux from './helpers/renderWithRouterAndRedux';
 
 const arrOfObj = [
   { name: "uma pessoa",

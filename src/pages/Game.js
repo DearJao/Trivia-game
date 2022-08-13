@@ -74,7 +74,64 @@ class Game extends Component {
     }
   }
 
-  renderQuestion = () => {
+  timeOut() {
+    this.showNextBtn(true);
+  }
+
+  showNextBtn(bool) {
+    this.setState({
+      disableButton: bool,
+      borderColor: {
+        correctAnswer: '3px solid rgb(6, 240, 15)',
+        wrongAnswer: '3px solid red',
+      },
+      hasNextBtn: true,
+    });
+  }
+
+  handleLogout() {
+    const { history } = this.props;
+    localStorage.removeItem('token');
+    history.push('/');
+  }
+
+  handleFetchQuestions() {
+    const { onFecthQuestions } = this.props;
+    const TOKEN = localStorage.getItem('token');
+    const URL_QUESTIONS = URL_GET_QUESTIONS + TOKEN;
+    onFecthQuestions(URL_QUESTIONS);
+  }
+
+  handleAnswer(answer, validAnswerObj) {
+    const { correctAnswer, difficulty } = validAnswerObj;
+    const { timer, score, updateScoreDispatch, timerResetDispatch } = this.props;
+    const SCORE_COEFFICIENT = 10;
+    if (correctAnswer === answer) {
+      const newScore = score + SCORE_COEFFICIENT
+        + (difficultyScale[difficulty] * timer);
+      updateScoreDispatch(newScore);
+    }
+    this.showNextBtn(false);
+    timerResetDispatch(timer);
+  }
+
+  renderBtn(bool, str, number, validAnswerObj) {
+    const { borderColor: { correctAnswer, wrongAnswer }, disableButton } = this.state;
+    return (
+      <button
+        disabled={ disableButton }
+        onClick={ () => this.handleAnswer(str, validAnswerObj) }
+        style={ bool ? { border: correctAnswer } : { border: wrongAnswer } }
+        key={ number }
+        type="button"
+        data-testid={ bool ? 'correct-answer' : `wrong-answer-${number}` }
+      >
+        { str }
+      </button>
+    );
+  }
+
+  renderQuestion() {
     const { activeIndex, hasNextBtn } = this.state;
     const { questions } = this.props;
     const { results } = questions;
@@ -102,62 +159,6 @@ class Game extends Component {
           }
         </div>
       </section>
-    );
-  }
-
-  handleAnswer = (answer, validAnswerObj) => {
-    const { correctAnswer, difficulty } = validAnswerObj;
-    const { timer, score, updateScoreDispatch, timerResetDispatch } = this.props;
-    const SCORE_COEFFICIENT = 10;
-    if (correctAnswer === answer) {
-      const newScore = score + SCORE_COEFFICIENT
-        + (difficultyScale[difficulty] * timer);
-      updateScoreDispatch(newScore);
-    }
-    this.setState({ borderColor: {
-      correctAnswer: '3px solid rgb(6, 240, 15)',
-      wrongAnswer: '3px solid red',
-    },
-    hasNextBtn: true,
-    }, () => timerResetDispatch(timer));
-  }
-
-  timeOut = () => {
-    this.setState({ disableButton: true,
-      borderColor: {
-        correctAnswer: '3px solid rgb(6, 240, 15)',
-        wrongAnswer: '3px solid red',
-      },
-      hasNextBtn: true,
-    });
-  }
-
-  handleLogout() {
-    const { history } = this.props;
-    localStorage.removeItem('token');
-    history.push('/');
-  }
-
-  handleFetchQuestions() {
-    const { onFecthQuestions } = this.props;
-    const TOKEN = localStorage.getItem('token');
-    const URL_QUESTIONS = URL_GET_QUESTIONS + TOKEN;
-    onFecthQuestions(URL_QUESTIONS);
-  }
-
-  renderBtn(bool, str, number, validAnswerObj) {
-    const { borderColor: { correctAnswer, wrongAnswer }, disableButton } = this.state;
-    return (
-      <button
-        disabled={ disableButton }
-        onClick={ () => this.handleAnswer(str, validAnswerObj) }
-        style={ bool ? { border: correctAnswer } : { border: wrongAnswer } }
-        key={ number }
-        type="button"
-        data-testid={ bool ? 'correct-answer' : `wrong-answer-${number}` }
-      >
-        { str }
-      </button>
     );
   }
 

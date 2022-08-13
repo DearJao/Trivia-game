@@ -147,28 +147,14 @@ class Game extends Component {
 
   renderBtn(bool, str, number, validAnswerObj) {
     const { borderColor: { correctAnswer, wrongAnswer }, disableButton } = this.state;
-    if (bool) {
-      return (
-        <button
-          disabled={ disableButton }
-          onClick={ () => this.handleAnswer(str, validAnswerObj) }
-          style={ { border: correctAnswer } }
-          key={ number }
-          type="button"
-          data-testid="correct-answer"
-        >
-          { str }
-        </button>
-      );
-    }
     return (
       <button
         disabled={ disableButton }
         onClick={ () => this.handleAnswer(str, validAnswerObj) }
-        style={ { border: wrongAnswer } }
+        style={ bool ? { border: correctAnswer } : { border: wrongAnswer } }
         key={ number }
         type="button"
-        data-testid={ `wrong-answer-${number}` }
+        data-testid={ bool ? 'correct-answer' : `wrong-answer-${number}` }
       >
         { str }
       </button>

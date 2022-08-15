@@ -28,3 +28,10 @@ body {
 .green-border {
   border: 1px solid green;
 }
+
+.ranking-card {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  justify-content: center;
+  align-items: center;
+}

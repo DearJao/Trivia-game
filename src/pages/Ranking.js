@@ -31,7 +31,7 @@ class Ranking extends Component {
           <div>
             <h2 data-testid="ranking-title">Ranking Geral</h2>
             { rankingLocalStorage.map((item, index) => (
-              <div key={ index }>
+              <div key={ index } className="ranking-card">
                 <img
                   data-testid="header-profile-picture"
                   src={ this.getURL(item.email) }
